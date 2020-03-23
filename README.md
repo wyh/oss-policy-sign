@@ -32,10 +32,11 @@ OSS_MAXSIZE = 10 # 10M
 ```
 3. Added the following to your urls.py:
 ```
-  from django.urls import path, include
-  path('/oss_policy_sign/',  include(oss_policy_sign.urls))
+  from oss_policy_sign.views import OssAuthViewSet
+  urlpatterns = [
+        #  ...
+        url(r'^oss/auth/', OssAuthViewSet),
+    ]
 ```
 
-4. Added oss_policy_sign in the INSTALLED_APPS
-
-5. test it by making a request
+4. test it by making a request

@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
      name='oss_policy_sign',
-     version='1.0',
+     version='1.01',
      author="wyh",
      author_email="samuel.yh.wu@gmail.com",
      description="A django rest framework (DRF) policy sign for aliyun oss",
@@ -17,7 +17,7 @@ setuptools.setup(
      tests_require=['nose'],
      classifiers=[
          "Programming Language :: Python :: 3",
-         "License :: OSI Approved :: Apache License",
+         "License :: OSI Approved :: Apache Software License",
          "Operating System :: OS Independent",
      ],
  )
