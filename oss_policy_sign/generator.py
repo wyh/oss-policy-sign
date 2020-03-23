@@ -5,7 +5,13 @@ import json
 import hmac
 from hashlib import sha1
 
-from exceptions import TooShortTimeout
+from .exceptions import TooShortTimeout
+
+
+def get_iso_8601(expire):
+    expire = int(time.time()) + expire
+    gmt = datetime.datetime.utcfromtimestamp(expire).isoformat()
+    return "{}Z".format(gmt)
 
 
 class OssPolicyAuth():
@@ -21,16 +27,14 @@ class OssPolicyAuth():
         # Going to expire in duration seconds
         self.timeout = timeout * 60
 
-    def get_iso_8601(expire):
-        gmt = datetime.datetime.utcfromtimestamp(expire).isoformat()
-        return "{}Z".format(gmt)
+        # limit of the max_size of uploading files
+        self.max_size = max_size
 
     def get_policy(self):
-        timeout = int(time.time()) + self.timeout
         policy_text = {
-            "expiration": self.get_iso_8601(timeout),
+            "expiration": get_iso_8601(self.timeout),
             "conditions": [
-                ['content-length-range', 0, self.maxSize * 1024 * 1024]
+                ['content-length-range', 0, self.max_size * 1024 * 1024]
             ]
         }
         policy = json.dumps(policy_text)
@@ -39,14 +43,14 @@ class OssPolicyAuth():
     def get_sign(self):
         policy = self.get_policy()
         h = hmac.new(self.access_key_secret.encode(), policy, sha1)
-        return base64.encodestring(h.digest())
+        return base64.encodebytes(h.digest())
 
     def get_token(self):
         timeout = self.timeout - 5 * 60
         if (timeout <= 0):
             raise TooShortTimeout()
 
-        expire_at = self.get_iso_8601(timeout)
+        expire_at = get_iso_8601(timeout)
 
         return {
             "policy": self.get_policy(),

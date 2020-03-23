@@ -36,4 +36,6 @@ OSS_MAXSIZE = 10 # 10M
   path('/oss_policy_sign/',  include(oss_policy_sign.urls))
 ```
 
-4. test it by a request to the above url
+4. Added oss_policy_sign in the INSTALLED_APPS
+
+5. test it by making a request
